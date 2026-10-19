@@ -1,0 +1,59 @@
+{
+  "name": "n8n-nodes-keeva",
+  "version": "0.1.0",
+  "description": "n8n nodes for Keeva: read and change events, tasks, groups, members and news of a sports club, and start workflows when they change.",
+  "license": "MIT",
+  "homepage": "https://github.com/Atelix/n8n-nodes-keeva#readme",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "keeva",
+    "sports club",
+    "club management"
+  ],
+  "author": {
+    "name": "Atelix",
+    "email": "neal@atelix.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Atelix/n8n-nodes-keeva.git"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "test": "vitest run",
+    "prepublishOnly": "npm run lint && npm run typecheck && npm test && npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [
+      "dist/credentials/KeevaApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Keeva/Keeva.node.js",
+      "dist/nodes/KeevaTrigger/KeevaTrigger.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "^0.52.6",
+    "eslint": "9.32.0",
+    "prettier": "3.6.2",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.7"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/Atelix/n8n-nodes-keeva/issues"
+  }
+}
