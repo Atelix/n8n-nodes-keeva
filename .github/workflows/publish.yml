@@ -1,0 +1,62 @@
+# Publishes n8n-nodes-keeva to npm with a provenance statement when a GitHub release is published.
+#
+# n8n requires community nodes to be published from GitHub Actions with npm provenance; `--provenance` together
+# with `id-token: write` produces a signed statement that links the package to this workflow, repository and commit.
+#
+# One-time setup, either:
+#   A. Trusted publishing (recommended): on npmjs.com open the package's settings, "Trusted Publishers", add GitHub
+#      Actions with owner Atelix, repository n8n-nodes-keeva and workflow publish.yml. Leave NPM_TOKEN unset.
+#      (For the very first publish the package does not exist on npm yet; use option B once, then switch.)
+#   B. A granular npm access token with publish rights, stored as the NPM_TOKEN repository secret.
+#
+# Releasing: bump "version" in package.json and add a CHANGELOG.md entry on main, then publish a GitHub release whose
+# tag is that version with a "v" prefix (for example v0.1.0). The workflow refuses a tag that does not match.
+
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      # Required to mint the OIDC token for the provenance statement (and for trusted publishing).
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Check that the release tag matches package.json
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "v$VERSION" ] && [ "$TAG" != "$VERSION" ]; then
+            echo "Release tag $TAG does not match package.json version $VERSION" >&2
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      # prepublishOnly runs lint, type-check, tests and the build again right before publishing.
+      - name: Publish
+        run: npm publish --provenance --access public
+        env:
+          # Empty when trusted publishing is used; npm then exchanges the OIDC token instead.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
