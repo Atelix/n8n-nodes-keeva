@@ -1,0 +1,3301 @@
+{
+	"openapi": "3.0.4",
+	"info": {
+		"title": "Keeva Public API",
+		"version": "v1"
+	},
+	"servers": [
+		{
+			"url": "http://127.0.0.1:5143"
+		}
+	],
+	"paths": {
+		"/api/v1/key": {
+			"get": {
+				"tags": ["PublicApiKey"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicApiKeyModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/events": {
+			"get": {
+				"tags": ["PublicEvents"],
+				"parameters": [
+					{
+						"name": "From",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "To",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "GroupId",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "ExternalId",
+						"in": "query",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "UpdatedSince",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicEventModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["PublicEvents"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateEventModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateEventModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateEventModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicEventModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/events/{eventId}": {
+			"get": {
+				"tags": ["PublicEvents"],
+				"parameters": [
+					{
+						"name": "eventId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicEventModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"tags": ["PublicEvents"],
+				"parameters": [
+					{
+						"name": "eventId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateEventModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateEventModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateEventModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicEventModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/events/{eventId}/cancel": {
+			"post": {
+				"tags": ["PublicEvents"],
+				"parameters": [
+					{
+						"name": "eventId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCancelEventModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCancelEventModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCancelEventModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicEventModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/groups": {
+			"get": {
+				"tags": ["PublicGroups"],
+				"parameters": [
+					{
+						"name": "ExternalId",
+						"in": "query",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "UpdatedSince",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicGroupModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["PublicGroups"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateGroupModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateGroupModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateGroupModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicGroupModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/groups/{groupId}": {
+			"get": {
+				"tags": ["PublicGroups"],
+				"parameters": [
+					{
+						"name": "groupId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicGroupModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"tags": ["PublicGroups"],
+				"parameters": [
+					{
+						"name": "groupId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateGroupModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateGroupModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateGroupModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicGroupModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/members": {
+			"get": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "ExternalId",
+						"in": "query",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "GroupId",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "UpdatedSince",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["PublicMembers"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateMemberModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateMemberModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateMemberModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/members/{memberId}": {
+			"get": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "memberId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "memberId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateMemberModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateMemberModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateMemberModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "memberId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/members/fields": {
+			"get": {
+				"tags": ["PublicMembers"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/PublicMemberFieldModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/members/onboard": {
+			"post": {
+				"tags": ["PublicMembers"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicOnboardMemberModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicOnboardMemberModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicOnboardMemberModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicOnboardResultModel"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicOnboardResultModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/members/{memberId}/personalData": {
+			"put": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "memberId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicMemberPersonalDataModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicMemberPersonalDataModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicMemberPersonalDataModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/members/{memberId}/fields": {
+			"patch": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "memberId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicSetMemberFieldsModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicSetMemberFieldsModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicSetMemberFieldsModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/members/{memberId}/accounts/{linkId}": {
+			"patch": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "memberId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "linkId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateMemberAccountModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateMemberAccountModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateMemberAccountModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/members/{memberId}/groups/{groupId}": {
+			"put": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "memberId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "groupId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicMemberGroupRoleModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicMemberGroupRoleModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicMemberGroupRoleModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "memberId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "groupId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/news": {
+			"get": {
+				"tags": ["PublicNews"],
+				"parameters": [
+					{
+						"name": "GroupId",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "UpdatedSince",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicNewsModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["PublicNews"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateNewsModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateNewsModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateNewsModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicNewsItemModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/news/{newsId}": {
+			"get": {
+				"tags": ["PublicNews"],
+				"parameters": [
+					{
+						"name": "newsId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicNewsArticleModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"tags": ["PublicNews"],
+				"parameters": [
+					{
+						"name": "newsId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateNewsModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateNewsModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateNewsModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicNewsItemModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/news/{newsId}/publish": {
+			"post": {
+				"tags": ["PublicNews"],
+				"parameters": [
+					{
+						"name": "newsId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicPublishNewsModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicPublishNewsModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicPublishNewsModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicNewsItemModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/tasks": {
+			"get": {
+				"tags": ["PublicTasks"],
+				"parameters": [
+					{
+						"name": "GroupId",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "EventId",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "UpdatedSince",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicTaskModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["PublicTasks"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateTaskModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateTaskModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateTaskModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicTaskModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/tasks/{taskId}": {
+			"get": {
+				"tags": ["PublicTasks"],
+				"parameters": [
+					{
+						"name": "taskId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicTaskModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"tags": ["PublicTasks"],
+				"parameters": [
+					{
+						"name": "taskId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateTaskModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateTaskModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicUpdateTaskModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicTaskModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"ApiKeyScope": {
+				"enum": [
+					"Events",
+					"Tasks",
+					"Groups",
+					"Members",
+					"PrivateEvents",
+					"News",
+					"EventsCreate",
+					"EventsUpdate",
+					"TasksCreate",
+					"TasksUpdate",
+					"GroupsCreate",
+					"GroupsUpdate",
+					"MembersCreate",
+					"MembersUpdate",
+					"NewsCreate",
+					"NewsUpdate",
+					"NewsPublish",
+					"UsersInvite",
+					"MembersContacts",
+					"MembersDelete",
+					"McpRead",
+					"McpContentDrafts",
+					"McpNewsDrafts",
+					"McpEventDrafts",
+					"MembersPersonalData"
+				],
+				"type": "string"
+			},
+			"ProblemDetails": {
+				"type": "object",
+				"properties": {
+					"type": {
+						"type": "string",
+						"nullable": true
+					},
+					"title": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					},
+					"detail": {
+						"type": "string",
+						"nullable": true
+					},
+					"instance": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": {}
+			},
+			"PublicAccountStatus": {
+				"enum": ["Invited", "Linked", "AlreadyLinked"],
+				"type": "string"
+			},
+			"PublicApiKeyModel": {
+				"required": ["club", "name", "scopes"],
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"club": {
+						"$ref": "#/components/schemas/PublicClubModel"
+					},
+					"scopes": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ApiKeyScope"
+						},
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicCancelEventModel": {
+				"required": ["reason"],
+				"type": "object",
+				"properties": {
+					"reason": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicClubModel": {
+				"required": ["id", "name", "slug"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"slug": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicCreateEventModel": {
+				"required": ["endTime", "groupId", "name", "startTime"],
+				"type": "object",
+				"properties": {
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string"
+					},
+					"externalId": {
+						"maxLength": 100,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"maxLength": 4000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"location": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"fieldId": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
+					"allowFieldConflict": {
+						"type": "boolean"
+					},
+					"type": {
+						"$ref": "#/components/schemas/PublicEventType"
+					},
+					"isPrivate": {
+						"type": "boolean"
+					},
+					"isClubEvent": {
+						"type": "boolean"
+					},
+					"startTime": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"endTime": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"gatheringTime": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"gatheringLocation": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicCreateGroupModel": {
+				"required": ["name"],
+				"type": "object",
+				"properties": {
+					"name": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string"
+					},
+					"externalId": {
+						"maxLength": 100,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"maxLength": 4000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"type": {
+						"$ref": "#/components/schemas/PublicGroupType"
+					},
+					"canCreateClubEvents": {
+						"type": "boolean"
+					},
+					"canCreateClubNews": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicCreateMemberModel": {
+				"required": ["birthDate", "email", "firstname", "lastname"],
+				"type": "object",
+				"properties": {
+					"firstname": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string"
+					},
+					"infix": {
+						"maxLength": 20,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"lastname": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string"
+					},
+					"externalId": {
+						"maxLength": 100,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"email": {
+						"maxLength": 320,
+						"minLength": 0,
+						"type": "string",
+						"format": "email"
+					},
+					"birthDate": {
+						"type": "string",
+						"format": "date"
+					},
+					"groups": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicMemberGroupModel"
+						},
+						"nullable": true
+					},
+					"personalData": {
+						"$ref": "#/components/schemas/PublicMemberPersonalDataModel"
+					},
+					"fields": {
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicSetMemberFieldValueModel"
+						},
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicCreateNewsModel": {
+				"required": ["groupId", "title"],
+				"type": "object",
+				"properties": {
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"title": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string"
+					},
+					"description": {
+						"maxLength": 4000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"content": {
+						"maxLength": 200000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"visibility": {
+						"$ref": "#/components/schemas/PublicNewsVisibility"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicCreateTaskModel": {
+				"required": ["groupId", "name"],
+				"type": "object",
+				"properties": {
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"eventId": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
+					"name": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string"
+					},
+					"description": {
+						"maxLength": 4000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"allowVolunteers": {
+						"type": "boolean"
+					},
+					"requiredCount": {
+						"maximum": 1000,
+						"minimum": 1,
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicEventModel": {
+				"required": [
+					"description",
+					"endTime",
+					"groupId",
+					"groupName",
+					"id",
+					"isCancelled",
+					"isClubEvent",
+					"isPrivate",
+					"location",
+					"name",
+					"startTime",
+					"type",
+					"updatedAt"
+				],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"groupName": {
+						"type": "string",
+						"nullable": true
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"externalId": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"location": {
+						"type": "string",
+						"nullable": true
+					},
+					"fieldName": {
+						"type": "string",
+						"nullable": true
+					},
+					"type": {
+						"$ref": "#/components/schemas/PublicEventType"
+					},
+					"isClubEvent": {
+						"type": "boolean"
+					},
+					"isPrivate": {
+						"type": "boolean"
+					},
+					"startTime": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"endTime": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"gatheringTime": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"gatheringLocation": {
+						"type": "string",
+						"nullable": true
+					},
+					"isCancelled": {
+						"type": "boolean"
+					},
+					"cancelReason": {
+						"type": "string",
+						"nullable": true
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicEventModelPublicPage": {
+				"required": ["items"],
+				"type": "object",
+				"properties": {
+					"items": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicEventModel"
+						},
+						"nullable": true
+					},
+					"nextOffset": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicEventType": {
+				"enum": ["Game", "Practice", "Other"],
+				"type": "string"
+			},
+			"PublicGender": {
+				"enum": ["Unspecified", "Female", "Male", "Other"],
+				"type": "string"
+			},
+			"PublicGroupModel": {
+				"required": ["description", "id", "name", "type", "updatedAt"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"externalId": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"type": {
+						"$ref": "#/components/schemas/PublicGroupType"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicGroupModelPublicPage": {
+				"required": ["items"],
+				"type": "object",
+				"properties": {
+					"items": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicGroupModel"
+						},
+						"nullable": true
+					},
+					"nextOffset": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicGroupRole": {
+				"enum": ["Player", "Coach", "Staff", "Chairman", "Member"],
+				"type": "string"
+			},
+			"PublicGroupType": {
+				"enum": ["Team", "Commission"],
+				"type": "string"
+			},
+			"PublicMemberAccountModel": {
+				"required": ["email", "invitePending", "isParent", "isPrimaryContact", "linkId"],
+				"type": "object",
+				"properties": {
+					"linkId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"email": {
+						"type": "string",
+						"nullable": true
+					},
+					"isParent": {
+						"type": "boolean"
+					},
+					"relationship": {
+						"$ref": "#/components/schemas/PublicParentRelationship"
+					},
+					"isPrimaryContact": {
+						"type": "boolean"
+					},
+					"phoneNumber": {
+						"type": "string",
+						"nullable": true
+					},
+					"invitePending": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicMemberAddressModel": {
+				"type": "object",
+				"properties": {
+					"street": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"houseNumber": {
+						"maxLength": 20,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"houseNumberAddition": {
+						"maxLength": 20,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"postalCode": {
+						"maxLength": 20,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"city": {
+						"maxLength": 100,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"countryCode": {
+						"pattern": "^[A-Za-z]{2}$",
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicMemberFieldModel": {
+				"required": ["id", "isRequired", "name", "options", "type", "visibleToMember"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"type": {
+						"$ref": "#/components/schemas/PublicMemberFieldType"
+					},
+					"options": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"nullable": true
+					},
+					"isRequired": {
+						"type": "boolean"
+					},
+					"visibleToMember": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicMemberFieldType": {
+				"enum": ["Text", "Number", "Date", "Boolean", "Select"],
+				"type": "string"
+			},
+			"PublicMemberFieldValueModel": {
+				"required": ["fieldId", "name", "type"],
+				"type": "object",
+				"properties": {
+					"fieldId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"type": {
+						"$ref": "#/components/schemas/PublicMemberFieldType"
+					},
+					"value": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicMemberGroupModel": {
+				"required": ["groupId", "role"],
+				"type": "object",
+				"properties": {
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"role": {
+						"$ref": "#/components/schemas/PublicGroupRole"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicMemberGroupRoleModel": {
+				"required": ["role"],
+				"type": "object",
+				"properties": {
+					"role": {
+						"$ref": "#/components/schemas/PublicGroupRole"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicMemberModel": {
+				"required": ["firstname", "groups", "id", "lastname", "updatedAt"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"firstname": {
+						"type": "string",
+						"nullable": true
+					},
+					"infix": {
+						"type": "string",
+						"nullable": true
+					},
+					"lastname": {
+						"type": "string",
+						"nullable": true
+					},
+					"externalId": {
+						"type": "string",
+						"nullable": true
+					},
+					"groups": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicMemberGroupModel"
+						},
+						"nullable": true
+					},
+					"email": {
+						"type": "string",
+						"nullable": true
+					},
+					"accounts": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicMemberAccountModel"
+						},
+						"nullable": true
+					},
+					"birthDate": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					},
+					"personalData": {
+						"$ref": "#/components/schemas/PublicMemberPersonalDataModel"
+					},
+					"fields": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicMemberFieldValueModel"
+						},
+						"nullable": true
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicMemberModelPublicPage": {
+				"required": ["items"],
+				"type": "object",
+				"properties": {
+					"items": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicMemberModel"
+						},
+						"nullable": true
+					},
+					"nextOffset": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicMemberPersonalDataModel": {
+				"type": "object",
+				"properties": {
+					"phoneNumber": {
+						"pattern": "^\\+?[0-9 ()\\-]{3,31}$",
+						"type": "string",
+						"nullable": true
+					},
+					"address": {
+						"$ref": "#/components/schemas/PublicMemberAddressModel"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/PublicGender"
+					},
+					"emergencyContactName": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"emergencyContactPhone": {
+						"pattern": "^\\+?[0-9 ()\\-]{3,31}$",
+						"type": "string",
+						"nullable": true
+					},
+					"memberSince": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					},
+					"memberUntil": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					},
+					"photoConsent": {
+						"type": "boolean"
+					},
+					"notes": {
+						"maxLength": 2000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicNewsArticleModel": {
+				"required": [
+					"content",
+					"description",
+					"groupId",
+					"groupName",
+					"id",
+					"publishedAt",
+					"title",
+					"updatedAt"
+				],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"groupName": {
+						"type": "string",
+						"nullable": true
+					},
+					"title": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"publishedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"content": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicNewsItemModel": {
+				"required": [
+					"content",
+					"description",
+					"groupId",
+					"groupName",
+					"id",
+					"title",
+					"updatedAt",
+					"visibility"
+				],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"groupName": {
+						"type": "string",
+						"nullable": true
+					},
+					"title": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"content": {
+						"type": "string",
+						"nullable": true
+					},
+					"visibility": {
+						"$ref": "#/components/schemas/PublicNewsVisibility"
+					},
+					"publishedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicNewsModel": {
+				"required": [
+					"description",
+					"groupId",
+					"groupName",
+					"id",
+					"publishedAt",
+					"title",
+					"updatedAt"
+				],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"groupName": {
+						"type": "string",
+						"nullable": true
+					},
+					"title": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"publishedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicNewsModelPublicPage": {
+				"required": ["items"],
+				"type": "object",
+				"properties": {
+					"items": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicNewsModel"
+						},
+						"nullable": true
+					},
+					"nextOffset": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicNewsVisibility": {
+				"enum": ["Group", "Club", "Public"],
+				"type": "string"
+			},
+			"PublicOnboardAccountModel": {
+				"required": ["email"],
+				"type": "object",
+				"properties": {
+					"email": {
+						"maxLength": 320,
+						"minLength": 0,
+						"type": "string",
+						"format": "email"
+					},
+					"firstname": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"lastname": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"isParent": {
+						"type": "boolean"
+					},
+					"relationship": {
+						"$ref": "#/components/schemas/PublicParentRelationship"
+					},
+					"phoneNumber": {
+						"pattern": "^\\+?[0-9 ()\\-]{3,31}$",
+						"type": "string",
+						"nullable": true
+					},
+					"isPrimaryContact": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicOnboardAccountResultModel": {
+				"required": ["email", "status"],
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/PublicAccountStatus"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicOnboardGroupModel": {
+				"required": ["groupId"],
+				"type": "object",
+				"properties": {
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"role": {
+						"$ref": "#/components/schemas/PublicGroupRole"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicOnboardMemberModel": {
+				"required": ["birthDate", "email", "externalId", "firstname", "lastname"],
+				"type": "object",
+				"properties": {
+					"externalId": {
+						"maxLength": 100,
+						"minLength": 0,
+						"type": "string"
+					},
+					"firstname": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string"
+					},
+					"infix": {
+						"maxLength": 20,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"lastname": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string"
+					},
+					"email": {
+						"maxLength": 320,
+						"minLength": 0,
+						"type": "string",
+						"format": "email"
+					},
+					"birthDate": {
+						"type": "string",
+						"format": "date"
+					},
+					"groups": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicOnboardGroupModel"
+						},
+						"nullable": true
+					},
+					"accounts": {
+						"maxItems": 10,
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicOnboardAccountModel"
+						},
+						"nullable": true
+					},
+					"personalData": {
+						"$ref": "#/components/schemas/PublicMemberPersonalDataModel"
+					},
+					"fields": {
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicSetMemberFieldValueModel"
+						},
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicOnboardResultModel": {
+				"required": ["accounts", "addedToGroups", "externalId", "member", "memberCreated"],
+				"type": "object",
+				"properties": {
+					"externalId": {
+						"type": "string",
+						"nullable": true
+					},
+					"member": {
+						"$ref": "#/components/schemas/PublicMemberModel"
+					},
+					"memberCreated": {
+						"type": "boolean"
+					},
+					"addedToGroups": {
+						"type": "array",
+						"items": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"nullable": true
+					},
+					"accounts": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicOnboardAccountResultModel"
+						},
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicParentRelationship": {
+				"enum": ["Parent", "Guardian", "Other"],
+				"type": "string"
+			},
+			"PublicPublishNewsModel": {
+				"type": "object",
+				"properties": {
+					"visibility": {
+						"$ref": "#/components/schemas/PublicNewsVisibility"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicSetMemberFieldValueModel": {
+				"required": ["fieldId"],
+				"type": "object",
+				"properties": {
+					"fieldId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"value": {
+						"maxLength": 4000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicSetMemberFieldsModel": {
+				"required": ["values"],
+				"type": "object",
+				"properties": {
+					"values": {
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicSetMemberFieldValueModel"
+						}
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicTaskModel": {
+				"required": [
+					"acceptedCount",
+					"allowVolunteers",
+					"description",
+					"groupId",
+					"id",
+					"name",
+					"updatedAt"
+				],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"eventId": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"allowVolunteers": {
+						"type": "boolean"
+					},
+					"requiredCount": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					},
+					"acceptedCount": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicTaskModelPublicPage": {
+				"required": ["items"],
+				"type": "object",
+				"properties": {
+					"items": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicTaskModel"
+						},
+						"nullable": true
+					},
+					"nextOffset": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicUpdateEventModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"maxLength": 200,
+						"minLength": 1,
+						"type": "string",
+						"nullable": true
+					},
+					"externalId": {
+						"maxLength": 100,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"maxLength": 4000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"location": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"fieldId": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
+					"allowFieldConflict": {
+						"type": "boolean"
+					},
+					"type": {
+						"$ref": "#/components/schemas/PublicEventType"
+					},
+					"isPrivate": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"isClubEvent": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"startTime": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"endTime": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"gatheringTime": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"gatheringLocation": {
+						"maxLength": 200,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicUpdateGroupModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"maxLength": 200,
+						"minLength": 1,
+						"type": "string",
+						"nullable": true
+					},
+					"externalId": {
+						"maxLength": 100,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"maxLength": 4000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"type": {
+						"$ref": "#/components/schemas/PublicGroupType"
+					},
+					"canCreateClubEvents": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"canCreateClubNews": {
+						"type": "boolean",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicUpdateMemberAccountModel": {
+				"type": "object",
+				"properties": {
+					"phoneNumber": {
+						"pattern": "^$|^\\+?[0-9 ()\\-]{3,31}$",
+						"type": "string",
+						"nullable": true
+					},
+					"relationship": {
+						"$ref": "#/components/schemas/PublicParentRelationship"
+					},
+					"isPrimaryContact": {
+						"type": "boolean",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicUpdateMemberModel": {
+				"type": "object",
+				"properties": {
+					"firstname": {
+						"maxLength": 200,
+						"minLength": 1,
+						"type": "string",
+						"nullable": true
+					},
+					"infix": {
+						"maxLength": 20,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"lastname": {
+						"maxLength": 200,
+						"minLength": 1,
+						"type": "string",
+						"nullable": true
+					},
+					"externalId": {
+						"maxLength": 100,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"email": {
+						"maxLength": 320,
+						"minLength": 0,
+						"type": "string",
+						"format": "email",
+						"nullable": true
+					},
+					"birthDate": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicUpdateNewsModel": {
+				"type": "object",
+				"properties": {
+					"title": {
+						"maxLength": 200,
+						"minLength": 1,
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"maxLength": 4000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"content": {
+						"maxLength": 200000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"visibility": {
+						"$ref": "#/components/schemas/PublicNewsVisibility"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicUpdateTaskModel": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"maxLength": 200,
+						"minLength": 1,
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"maxLength": 4000,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"allowVolunteers": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"requiredCount": {
+						"maximum": 1000,
+						"minimum": 0,
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"ValidationProblemDetails": {
+				"type": "object",
+				"properties": {
+					"type": {
+						"type": "string",
+						"nullable": true
+					},
+					"title": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					},
+					"detail": {
+						"type": "string",
+						"nullable": true
+					},
+					"instance": {
+						"type": "string",
+						"nullable": true
+					},
+					"errors": {
+						"type": "object",
+						"additionalProperties": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"nullable": true
+					}
+				},
+				"additionalProperties": {}
+			}
+		},
+		"securitySchemes": {
+			"Bearer": {
+				"type": "http",
+				"description": "Bearer authorization using a user JWT; the public API takes a club API key (kva_\u2026) instead. Example: \"Authorization: Bearer {token}\"",
+				"scheme": "bearer"
+			}
+		}
+	},
+	"security": [
+		{
+			"Bearer": []
+		}
+	],
+	"tags": [
+		{
+			"name": "PublicApiKey"
+		},
+		{
+			"name": "PublicEvents"
+		},
+		{
+			"name": "PublicGroups"
+		},
+		{
+			"name": "PublicMembers"
+		},
+		{
+			"name": "PublicNews"
+		},
+		{
+			"name": "PublicTasks"
+		}
+	]
+}
