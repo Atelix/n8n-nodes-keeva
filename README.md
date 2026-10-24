@@ -185,4 +185,4 @@ that version (for example `v0.1.0`). The **Publish** workflow publishes to npm w
 
 ## License
 
-[MIT](LICENSE.md)
+[MIT](LICENSE)
