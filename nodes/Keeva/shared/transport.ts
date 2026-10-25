@@ -1,10 +1,12 @@
 import type {
 	IDataObject,
 	IExecuteSingleFunctions,
+	IHookFunctions,
 	IHttpRequestMethods,
 	IHttpRequestOptions,
 	ILoadOptionsFunctions,
 	IPollFunctions,
+	IWebhookFunctions,
 } from 'n8n-workflow';
 
 export const KEEVA_CREDENTIAL = 'keevaApi';
@@ -61,7 +63,12 @@ export async function fetchAllPages(
 	}
 }
 
-type KeevaRequestContext = IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions;
+type KeevaRequestContext =
+	| IExecuteSingleFunctions
+	| IHookFunctions
+	| ILoadOptionsFunctions
+	| IPollFunctions
+	| IWebhookFunctions;
 
 /** An authenticated request to the Keeva public API, for code that does not use declarative routing. */
 export async function keevaApiRequest(
