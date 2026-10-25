@@ -2156,7 +2156,7 @@
 				"additionalProperties": false
 			},
 			"PublicCreateMemberModel": {
-				"required": ["birthDate", "email", "firstname", "lastname"],
+				"required": ["email", "firstname", "lastname"],
 				"type": "object",
 				"properties": {
 					"firstname": {
@@ -2189,7 +2189,8 @@
 					},
 					"birthDate": {
 						"type": "string",
-						"format": "date"
+						"format": "date",
+						"nullable": true
 					},
 					"groups": {
 						"type": "array",
@@ -3037,7 +3038,7 @@
 				"additionalProperties": false
 			},
 			"PublicOnboardMemberModel": {
-				"required": ["birthDate", "email", "externalId", "firstname", "lastname"],
+				"required": ["email", "externalId", "firstname", "lastname"],
 				"type": "object",
 				"properties": {
 					"externalId": {
@@ -3069,7 +3070,8 @@
 					},
 					"birthDate": {
 						"type": "string",
-						"format": "date"
+						"format": "date",
+						"nullable": true
 					},
 					"groups": {
 						"type": "array",

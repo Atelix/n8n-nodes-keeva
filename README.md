@@ -77,6 +77,21 @@ Each kind of data has separate read, create and change scopes. Give the key only
 The **Group** pickers load the club's groups and need `Groups`; without it, enter a group ID instead. The **Member
 field** picker needs `Members` + `MembersPersonalData`.
 
+### Personal data
+
+Member data your workflows read from Keeva (names, email addresses, birth dates, personal data, member fields) is
+personal data under the GDPR. The club stays responsible for it, and the n8n instance and every service a workflow
+sends it to process it on the club's behalf:
+
+- Make sure the club has a data processing agreement with whoever hosts n8n (n8n Cloud or your own host) and with each
+  service the workflow passes member data to.
+- Give a key only the scopes the workflow needs; leave out `MembersContacts` and `MembersPersonalData` unless it uses
+  them.
+- n8n stores the input and output of every execution. Limit how long it keeps them (for example with
+  `EXECUTIONS_DATA_PRUNE` and `EXECUTIONS_DATA_MAX_AGE`, or **Save successful production executions** off in the
+  workflow settings).
+- Revoke a key in Keeva when the workflow is no longer used.
+
 ## Operations
 
 **Event**
@@ -95,7 +110,7 @@ field** picker needs `Members` + `MembersPersonalData`.
 
 **Member**
 - **Add to Group**: put the member in a group with a role, or change their role there.
-- **Create**: add a member with email address and birth date, optionally in groups, with personal data and member field
+- **Create**: add a member with email address and, optionally, birth date, in groups, with personal data and member field
   values.
 - **Delete**: deletes the member **for good**, with their invitations, attendance, account links, group rights and
   profile picture. It cannot be undone. Members with club rights cannot be deleted through the API (`409`).
