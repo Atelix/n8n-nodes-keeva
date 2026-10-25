@@ -1756,6 +1756,174 @@
 					}
 				}
 			}
+		},
+		"/api/v1/webhooks": {
+			"get": {
+				"tags": ["PublicWebhooks"],
+				"parameters": [
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "UpdatedSince",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicWebhookModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["PublicWebhooks"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateWebhookModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateWebhookModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicCreateWebhookModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicCreatedWebhookModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/webhooks/{webhookId}": {
+			"get": {
+				"tags": ["PublicWebhooks"],
+				"parameters": [
+					{
+						"name": "webhookId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicWebhookModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["PublicWebhooks"],
+				"parameters": [
+					{
+						"name": "webhookId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -1786,7 +1954,11 @@
 					"McpContentDrafts",
 					"McpNewsDrafts",
 					"McpEventDrafts",
-					"MembersPersonalData"
+					"MembersPersonalData",
+					"McpFiles",
+					"McpCancelReasons",
+					"Sponsors",
+					"Webhooks"
 				],
 				"type": "string"
 			},
@@ -1822,7 +1994,7 @@
 				"type": "string"
 			},
 			"PublicApiKeyModel": {
-				"required": ["club", "name", "scopes"],
+				"required": ["club", "name", "scopes", "webhooks"],
 				"type": "object",
 				"properties": {
 					"name": {
@@ -1836,6 +2008,13 @@
 						"type": "array",
 						"items": {
 							"$ref": "#/components/schemas/ApiKeyScope"
+						},
+						"nullable": true
+					},
+					"webhooks": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicWebhookModel"
 						},
 						"nullable": true
 					}
@@ -2096,6 +2275,68 @@
 						"minimum": 1,
 						"type": "integer",
 						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicCreateWebhookModel": {
+				"required": ["events", "url"],
+				"type": "object",
+				"properties": {
+					"name": {
+						"maxLength": 100,
+						"minLength": 0,
+						"type": "string",
+						"nullable": true
+					},
+					"url": {
+						"maxLength": 2000,
+						"minLength": 0,
+						"type": "string"
+					},
+					"events": {
+						"minItems": 1,
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicCreatedWebhookModel": {
+				"required": ["createdAt", "events", "id", "isActive", "name", "secret", "url"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"url": {
+						"type": "string",
+						"nullable": true
+					},
+					"events": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"nullable": true
+					},
+					"isActive": {
+						"type": "boolean"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"secret": {
+						"type": "string",
 						"nullable": true
 					}
 				},
@@ -3227,6 +3468,58 @@
 				},
 				"additionalProperties": false
 			},
+			"PublicWebhookModel": {
+				"required": ["createdAt", "events", "id", "isActive", "name", "url"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"url": {
+						"type": "string",
+						"nullable": true
+					},
+					"events": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"nullable": true
+					},
+					"isActive": {
+						"type": "boolean"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicWebhookModelPublicPage": {
+				"required": ["items"],
+				"type": "object",
+				"properties": {
+					"items": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicWebhookModel"
+						},
+						"nullable": true
+					},
+					"nextOffset": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
 			"ValidationProblemDetails": {
 				"type": "object",
 				"properties": {
@@ -3296,6 +3589,9 @@
 		},
 		{
 			"name": "PublicTasks"
+		},
+		{
+			"name": "PublicWebhooks"
 		}
 	]
 }

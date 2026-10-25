@@ -10,6 +10,12 @@ import { KeevaApi } from '../credentials/KeevaApi.credentials';
 import { Keeva } from '../nodes/Keeva/Keeva.node';
 import { buildMemberBody } from '../nodes/Keeva/shared/memberBody';
 import { KeevaTrigger, TRIGGER_PATHS } from '../nodes/KeevaTrigger/KeevaTrigger.node';
+import {
+	createWebhook,
+	deleteWebhook,
+	webhookExists,
+	type KeevaRequest,
+} from '../nodes/KeevaWebhookTrigger/webhook';
 import openApiDocument from './fixtures/keeva-openapi.json';
 
 type Schema = {
@@ -283,6 +289,40 @@ describe('Keeva node against the public OpenAPI document', () => {
 			expect(api, resource).toBeDefined();
 			const names = (api?.parameters ?? []).map((p) => p.name.toLowerCase());
 			expect(names).toEqual(expect.arrayContaining(['updatedsince', 'offset', 'limit']));
+		}
+	});
+
+	it('the instant trigger calls webhook endpoints that exist, with a body that matches the schema', async () => {
+		const calls: Array<{ key: string; body?: IDataObject; qs?: IDataObject }> = [];
+		const request: KeevaRequest = async (method, path, body, qs) => {
+			calls.push({
+				key: `${method} ${path.replace(/\/webhooks\/[^/]+$/, '/webhooks/{}')}`,
+				body,
+				qs,
+			});
+			if (method === 'POST') return { id: 'w1', secret: 'whsec_x' };
+			if (path === '/webhooks') return { items: [], nextOffset: null };
+			return { id: 'w1', url: 'https://n8n.example.com/webhook/x', events: ['event.created'] };
+		};
+		const target = { url: 'https://n8n.example.com/webhook/x', events: ['event.created'] };
+		await webhookExists(request, {}, target);
+		await webhookExists(request, { webhookId: 'w1', webhookSecret: 'whsec_x' }, target);
+		await createWebhook(request, {}, { ...target, name: 'n8n' });
+		await deleteWebhook(request, { webhookId: 'w1' });
+
+		expect([...new Set(calls.map((c) => c.key))].sort()).toEqual(
+			['DELETE /webhooks/{}', 'GET /webhooks', 'GET /webhooks/{}', 'POST /webhooks'].sort(),
+		);
+		for (const call of calls) {
+			const api = apiOperations.get(call.key);
+			expect(api, call.key).toBeDefined();
+			if (call.body) expect(unknownFields(call.body, requestSchema(api))).toEqual([]);
+			const known = new Set(
+				(api?.parameters ?? []).filter((p) => p.in === 'query').map((p) => p.name.toLowerCase()),
+			);
+			expect(Object.keys(call.qs ?? {}).filter((name) => !known.has(name.toLowerCase()))).toEqual(
+				[],
+			);
 		}
 	});
 

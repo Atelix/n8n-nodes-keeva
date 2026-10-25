@@ -7,10 +7,11 @@ Keeva's public API, and start when that data changes.
 It contains:
 
 - **Keeva**: events, tasks, groups, members, news and parent accounts. Also usable as a tool by n8n's AI agents.
-- **Keeva Trigger**: starts a workflow when events, tasks, groups, members or news are added or changed.
+- **Keeva Trigger**: starts a workflow when events, tasks, groups, members or news are added or changed, by polling.
+- **Keeva Instant Trigger**: starts a workflow as soon as Keeva reports a change through a webhook, deletions included.
 
 [Installation](#installation) · [Credentials](#credentials) · [Operations](#operations) ·
-[Keeva Trigger](#keeva-trigger) · [Example](#example) · [Compatibility](#compatibility) ·
+[Keeva Trigger](#keeva-trigger) · [Keeva Instant Trigger](#keeva-instant-trigger) · [Example](#example) · [Compatibility](#compatibility) ·
 [Development](#development)
 
 ## Installation
@@ -71,6 +72,7 @@ Each kind of data has separate read, create and change scopes. Give the key only
 | News | Publish | `NewsPublish` |
 | Parent Account | Update | `MembersUpdate` + `MembersContacts` |
 | Keeva Trigger | any | The read scope of the watched data (`Events`, `Tasks`, `Groups`, `Members` or `News`) |
+| Keeva Instant Trigger | any | `Webhooks` + the read scope of every chosen event type (`event.*` needs `Events`, `task.*` `Tasks`, and so on) |
 
 The **Group** pickers load the club's groups and need `Groups`; without it, enter a group ID instead. The **Member
 field** picker needs `Members` + `MembersPersonalData`.
@@ -126,7 +128,8 @@ Notes:
 - **Update** operations send only the fields you add, so a field cannot be cleared by leaving it empty; External ID
   (and a member's Infix) are removed by sending an empty value.
 - Dates without a time zone are read in the workflow's time zone and sent to Keeva in UTC. Keeva returns times in UTC.
-- Keeva does not report deletions; refresh a full copy now and then if you keep one in sync.
+- The list endpoints do not report deletions; use the **Keeva Instant Trigger** (`*.deleted` events) or refresh a full
+  copy now and then if you keep one in sync.
 
 ## Keeva Trigger
 
@@ -140,6 +143,54 @@ poll interval.
   recorded time.
 - Deleted items are not reported. An item changed exactly at the moment of a poll can be emitted twice; use its `id` and
   `updatedAt` if a downstream system must not see duplicates.
+
+## Keeva Instant Trigger
+
+A webhook trigger: Keeva posts each change to n8n as it happens, so nothing is polled. Choose the **Events** that should
+start the workflow:
+
+| Data | Event types |
+|------|-------------|
+| Events | `event.created`, `event.updated`, `event.cancelled`, `event.deleted` |
+| Tasks | `task.created`, `task.updated`, `task.deleted` |
+| Groups | `group.created`, `group.updated`, `group.deleted` |
+| Members | `member.created`, `member.updated`, `member.archived`, `member.deleted`, `member.groups_changed` |
+| News | `news.published`, `news.updated`, `news.deleted` (published news with the Public visibility) |
+
+How it works:
+
+- **Activating** the workflow creates a webhook in Keeva for the key (`POST /api/v1/webhooks`), named
+  `n8n: <workflow name>`, and keeps its id and signing secret in the workflow. **Deactivating** removes it
+  (`DELETE /api/v1/webhooks/{id}`). Changing the event types replaces the webhook on the next activation. **Listen for
+  test event** in the editor does the same with n8n's test address. The club app lists these webhooks under
+  **Manage → Webhooks**.
+- **Keeva only sends to a public `https://` address.** n8n's webhook address (its `WEBHOOK_URL` setting) must be
+  reachable from the internet over HTTPS; `localhost`, private addresses and plain `http://` are refused with `400`.
+- Every delivery's `Keeva-Webhook-Signature` is checked against the raw body with the secret, in constant time, and a
+  `Keeva-Webhook-Timestamp` more than 5 minutes off is refused. Anything that fails gets `401` and starts nothing.
+- Each delivery is one item with Keeva's payload, which says what happened but does not contain the item:
+
+  ```json
+  {
+    "id": "1f0c6e5a-8a4e-4c55-9d43-6f1f6b7c2a10",
+    "type": "event.updated",
+    "occurredAt": "2026-10-25T12:00:00Z",
+    "clubId": "…",
+    "data": { "id": "…", "externalId": "match-7", "url": "https://yourclub.keeva.app/api/v1/events/…" }
+  }
+  ```
+
+- **Options → Fetch Full Record** reads the item with the same key and adds it as `record`. Only the path of
+  `data.url` is used, with the credential's Base URL, so the key is never sent anywhere else. Deletions and
+  `member.archived` have no `url`, so `record` is `null`; it is also `null` when the key cannot read the item (any
+  more), for example an event that became private. Any other failure (such as `429`) fails the delivery, and Keeva
+  sends it again later.
+- **Options → Include Test Pings** also lets the `ping` a club manager sends from the club app (**Send test**) start
+  the workflow; by default it is answered and ignored.
+- Delivery is **at least once** and **not in order**: Keeva retries failed deliveries for up to two days with the
+  same `id`. Drop an `id` you have already handled, and read the item (or use `occurredAt`) rather than relying on
+  the order of events. A webhook that keeps failing for three days is switched off by Keeva; resume it in the club
+  app.
 
 ## Example
 
@@ -158,7 +209,8 @@ same member.
 ## Compatibility
 
 Built with `@n8n/node-cli` 0.52.6 against `n8n-workflow` 2.43. The routes, parameters and body fields are checked
-against Keeva's public OpenAPI document as of 19 October 2026 (see [Development](#development)).
+against Keeva's public OpenAPI document as of 19 October 2026, with the `/api/v1/webhooks` routes added on
+25 October 2026 (see [Development](#development)).
 
 ## Development
 
@@ -172,8 +224,10 @@ npm run dev        # starts n8n on http://localhost:5678 with these nodes loaded
 ```
 
 `test/openapi.test.ts` checks every operation's method and path, query parameters, body fields and enum values against
-`test/fixtures/keeva-openapi.json`, a copy of Keeva's `GET /api/v1/openapi.json`. Refresh that file when Keeva's
-public API changes.
+`test/fixtures/keeva-openapi.json`, a copy of Keeva's `GET /api/v1/openapi.json`, and does the same for the Keeva
+Instant Trigger's webhook requests. Refresh that file when Keeva's public API changes. The `/api/v1/webhooks` part was
+written from Keeva's `PublicWebhooksController` and its models rather than downloaded; replace the whole file with a
+fresh download when you next refresh it.
 
 Releasing: bump `version` in `package.json` and add a `CHANGELOG.md` entry, then publish a GitHub release tagged with
 that version (for example `v0.1.0`). The **Publish** workflow publishes to npm with provenance.

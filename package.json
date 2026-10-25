@@ -1,7 +1,7 @@
 {
   "name": "n8n-nodes-keeva",
-  "version": "0.1.0",
-  "description": "n8n nodes for Keeva: read and change events, tasks, groups, members and news of a sports club, and start workflows when they change.",
+  "version": "0.2.0",
+  "description": "n8n nodes for Keeva: read and change events, tasks, groups, members and news of a sports club, and start workflows when they change, by polling or instantly through webhooks.",
   "license": "MIT",
   "homepage": "https://github.com/Atelix/n8n-nodes-keeva#readme",
   "keywords": [
@@ -40,7 +40,8 @@
     ],
     "nodes": [
       "dist/nodes/Keeva/Keeva.node.js",
-      "dist/nodes/KeevaTrigger/KeevaTrigger.node.js"
+      "dist/nodes/KeevaTrigger/KeevaTrigger.node.js",
+      "dist/nodes/KeevaWebhookTrigger/KeevaWebhookTrigger.node.js"
     ]
   },
   "devDependencies": {
