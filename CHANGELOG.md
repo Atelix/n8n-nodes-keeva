@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Member **Create** and **Onboard**: **Birth Date** is optional, as it is in Keeva now.
+- Member **Set Personal Data**, **Create** and **Onboard**: **Photo Consent** is gone, as Keeva dropped it.
 - README: a **Personal data** section on data processing agreements, key scopes and n8n's execution data.
 
 ## 0.2.0

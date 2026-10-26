@@ -171,13 +171,6 @@ const personalDataOptions: INodeProperties[] = [
 		description: 'The club’s internal note about the member',
 	},
 	{ displayName: 'Phone Number', name: 'phoneNumber', type: 'string', default: '' },
-	{
-		displayName: 'Photo Consent',
-		name: 'photoConsent',
-		type: 'boolean',
-		default: false,
-		description: 'Whether the member consents to photos',
-	},
 	{ displayName: 'Postal Code', name: 'postalCode', type: 'string', default: '' },
 	{ displayName: 'Street', name: 'street', type: 'string', default: '' },
 ];

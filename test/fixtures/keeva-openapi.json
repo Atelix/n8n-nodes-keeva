@@ -2792,9 +2792,6 @@
 						"format": "date",
 						"nullable": true
 					},
-					"photoConsent": {
-						"type": "boolean"
-					},
 					"notes": {
 						"maxLength": 2000,
 						"minLength": 0,

@@ -256,7 +256,6 @@ describe('Keeva node against the public OpenAPI document', () => {
 				emergencyContactPhone: '+31 6 87654321',
 				memberSince: '2020-01-01',
 				memberUntil: '2030-01-01',
-				photoConsent: true,
 				notes: 'note',
 			},
 			memberFields: {
