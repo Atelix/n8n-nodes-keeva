@@ -18,7 +18,6 @@ const PERSONAL_KEYS = [
 	'emergencyContactPhone',
 	'memberSince',
 	'memberUntil',
-	'photoConsent',
 	'notes',
 ] as const;
 
