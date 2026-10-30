@@ -76,6 +76,24 @@ const accountsOption: INodeProperties = {
 					default: '',
 				},
 				{
+					displayName: 'Email Off For Group Names or IDs',
+					name: 'emailOffGroups',
+					type: 'multiOptions',
+					typeOptions: { loadOptionsMethod: 'getGroups' },
+					default: [],
+					description:
+						'Groups whose news this account does not get by email: the member’s groups or groups that publish club news. Only applied to a new account; an existing account keeps its own choices. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+				},
+				{
+					displayName: 'Email On For Group Names or IDs',
+					name: 'emailOnGroups',
+					type: 'multiOptions',
+					typeOptions: { loadOptionsMethod: 'getGroups' },
+					default: [],
+					description:
+						'Groups whose news this account gets by email. Email is on unless turned off, so this mainly reports the account’s setting back in the output. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+				},
+				{
 					displayName: 'First Name',
 					name: 'firstname',
 					type: 'string',

@@ -2460,6 +2460,20 @@
 				"enum": ["Unspecified", "Female", "Male", "Other"],
 				"type": "string"
 			},
+			"PublicEmailGroupModel": {
+				"required": ["emailEnabled", "groupId"],
+				"type": "object",
+				"properties": {
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"emailEnabled": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
 			"PublicGroupModel": {
 				"required": ["description", "id", "name", "type", "updatedAt"],
 				"type": "object",
@@ -2482,6 +2496,9 @@
 					},
 					"type": {
 						"$ref": "#/components/schemas/PublicGroupType"
+					},
+					"publishesClubNews": {
+						"type": "boolean"
 					},
 					"updatedAt": {
 						"type": "string",
@@ -3002,6 +3019,14 @@
 					},
 					"isPrimaryContact": {
 						"type": "boolean"
+					},
+					"emailGroups": {
+						"maxItems": 100,
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicEmailGroupModel"
+						},
+						"nullable": true
 					}
 				},
 				"additionalProperties": false
@@ -3016,6 +3041,16 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/PublicAccountStatus"
+					},
+					"emailGroupsApplied": {
+						"type": "boolean"
+					},
+					"emailGroups": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicEmailGroupModel"
+						},
+						"nullable": true
 					}
 				},
 				"additionalProperties": false

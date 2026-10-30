@@ -37,6 +37,20 @@ export function toGroupMemberships(collection: unknown, defaultRole = 'Player'):
 		.map((row) => ({ groupId: row.groupId, role: present(row.role) ? row.role : defaultRole }));
 }
 
+/** A multi-select value (or an expression's comma-separated text) as a list of IDs. */
+function ids(value: unknown): string[] {
+	const list = Array.isArray(value) ? value : typeof value === 'string' ? value.split(',') : [];
+	return list.map((id) => String(id).trim()).filter((id) => id !== '');
+}
+
+/** The account's "Email On/Off For Groups" choices as Keeva's `[{ groupId, emailEnabled }]`. */
+function toEmailGroups(row: IDataObject): IDataObject[] {
+	return [
+		...ids(row.emailOnGroups).map((groupId) => ({ groupId, emailEnabled: true })),
+		...ids(row.emailOffGroups).map((groupId) => ({ groupId, emailEnabled: false })),
+	];
+}
+
 /** Account rows of the onboarding "Accounts" fixed collection, leaving out what was not filled in. */
 export function toOnboardAccounts(collection: unknown): IDataObject[] {
 	return rows(collection, 'account')
@@ -47,6 +61,8 @@ export function toOnboardAccounts(collection: unknown): IDataObject[] {
 				if (present(row[key])) account[key] = row[key];
 			}
 			if (row.isPrimaryContact === true) account.isPrimaryContact = true;
+			const emailGroups = toEmailGroups(row);
+			if (emailGroups.length > 0) account.emailGroups = emailGroups;
 			return account;
 		});
 }

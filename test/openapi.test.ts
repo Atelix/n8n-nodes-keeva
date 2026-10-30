@@ -239,6 +239,8 @@ describe('Keeva node against the public OpenAPI document', () => {
 							relationship: 'Guardian',
 							phoneNumber: '+31 6 12345678',
 							isPrimaryContact: true,
+							emailOnGroups: ['g1'],
+							emailOffGroups: ['g2'],
 						},
 					],
 				},
