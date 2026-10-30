@@ -76,6 +76,24 @@ const accountsOption: INodeProperties = {
 					default: '',
 				},
 				{
+					displayName: 'Email Off For Group Names or IDs',
+					name: 'emailOffGroups',
+					type: 'multiOptions',
+					typeOptions: { loadOptionsMethod: 'getGroups' },
+					default: [],
+					description:
+						'Groups whose news this account no longer gets by email: the member’s groups or groups that publish club news. Works like the switches in the Keeva app, also for an existing account. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+				},
+				{
+					displayName: 'Email On For Group Names or IDs',
+					name: 'emailOnGroups',
+					type: 'multiOptions',
+					typeOptions: { loadOptionsMethod: 'getGroups' },
+					default: [],
+					description:
+						'Groups whose news this account gets by email, turning a group back on (also after an unsubscribe through an email link). Groups left in neither list are not changed; email is on for all groups until one is turned off. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+				},
+				{
 					displayName: 'First Name',
 					name: 'firstname',
 					type: 'string',

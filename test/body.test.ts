@@ -94,6 +94,35 @@ describe('member bodies', () => {
 		expect(body).not.toHaveProperty('personalData');
 	});
 
+	it('sends an account’s email group choices, on first, and leaves them out when none are chosen', () => {
+		const body = buildMemberBody(
+			'onboard',
+			{ externalId: '1001' },
+			{
+				additionalFields: {
+					accounts: {
+						account: [
+							{ email: 'a@example.test', emailOnGroups: ['g1'], emailOffGroups: 'g2, g3' },
+							{ email: 'b@example.test', emailOnGroups: [], emailOffGroups: [] },
+						],
+					},
+				},
+			},
+		);
+		expect(body.accounts).toEqual([
+			{
+				email: 'a@example.test',
+				isParent: false,
+				emailGroups: [
+					{ groupId: 'g1', emailEnabled: true },
+					{ groupId: 'g2', emailEnabled: false },
+					{ groupId: 'g3', emailEnabled: false },
+				],
+			},
+			{ email: 'b@example.test', isParent: false },
+		]);
+	});
+
 	it('always sends a full personal data object, since PUT replaces it', () => {
 		expect(buildMemberBody('setPersonalData', {}, { personalData: {} })).toEqual({});
 		expect(buildMemberBody('setPersonalData', {}, { personalData: { notes: 'n' } })).toEqual({
