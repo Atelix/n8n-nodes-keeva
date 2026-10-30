@@ -2,8 +2,8 @@
 
 ## Unreleased
 
-- Member **Onboard**: each account takes **Email On For Groups** and **Email Off For Groups**, which groups' news a
-  new account gets by email. An existing account keeps its own choices; the output shows each account's setting.
+- Member **Onboard**: each account takes **Email On For Groups** and **Email Off For Groups**, which groups' news the
+  account gets by email, working like the switches in the Keeva app for new and existing accounts.
 - The OpenAPI test fixture includes the onboarding `emailGroups` fields and the groups' `publishesClubNews`.
 - Member **Create** and **Onboard**: **Birth Date** is optional, as it is in Keeva now.
 - Member **Set Personal Data**, **Create** and **Onboard**: **Photo Consent** is gone, as Keeva dropped it.
