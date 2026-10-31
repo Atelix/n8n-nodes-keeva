@@ -3681,7 +3681,7 @@
 				"additionalProperties": false
 			},
 			"PublicGroupRoleModel": {
-				"required": ["groupType", "id", "name", "receivesTeamNotifications"],
+				"required": ["groupType", "id", "name", "receivesGroupNotifications"],
 				"type": "object",
 				"properties": {
 					"id": {
@@ -3695,7 +3695,7 @@
 					"groupType": {
 						"$ref": "#/components/schemas/PublicGroupType"
 					},
-					"receivesTeamNotifications": {
+					"receivesGroupNotifications": {
 						"type": "boolean"
 					}
 				},

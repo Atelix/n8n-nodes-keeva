@@ -23,7 +23,7 @@ export async function getGroupRoles(this: ILoadOptionsFunctions): Promise<INodeP
 		name: String(role.name),
 		value: String(role.id),
 		description: `${role.groupType === 'Commission' ? 'Committees' : 'Teams'}${
-			role.receivesTeamNotifications ? ', receives team notifications' : ''
+			role.receivesGroupNotifications ? ', receives group notifications' : ''
 		}`,
 	}));
 }
