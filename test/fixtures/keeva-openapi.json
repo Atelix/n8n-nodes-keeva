@@ -6,7 +6,7 @@
 	},
 	"servers": [
 		{
-			"url": "http://127.0.0.1:5143"
+			"url": "http://localhost:5143"
 		}
 	],
 	"paths": {
@@ -20,6 +20,23 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/PublicApiKeyModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/club": {
+			"get": {
+				"tags": ["PublicClub"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicClubDetailsModel"
 								}
 							}
 						}
@@ -60,6 +77,36 @@
 						"in": "query",
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"name": "Type",
+						"in": "query",
+						"schema": {
+							"$ref": "#/components/schemas/PublicEventType"
+						}
+					},
+					{
+						"name": "FieldId",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "RepeatId",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "IncludeDrafts",
+						"in": "query",
+						"schema": {
+							"type": "boolean"
 						}
 					},
 					{
@@ -280,6 +327,35 @@
 						}
 					}
 				}
+			},
+			"delete": {
+				"tags": ["PublicEvents"],
+				"parameters": [
+					{
+						"name": "eventId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/api/v1/events/{eventId}/cancel": {
@@ -332,6 +408,331 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/events/{eventId}/publish": {
+			"post": {
+				"tags": ["PublicEvents"],
+				"parameters": [
+					{
+						"name": "eventId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicPublishEventModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicPublishEventModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicPublishEventModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicEventModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/events/{eventId}/invites": {
+			"get": {
+				"tags": ["PublicEvents"],
+				"parameters": [
+					{
+						"name": "eventId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/PublicInviteModel"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["PublicEvents"],
+				"parameters": [
+					{
+						"name": "eventId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicInviteMembersModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicInviteMembersModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicInviteMembersModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicEventModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/events/deleted": {
+			"get": {
+				"tags": ["PublicEvents"],
+				"parameters": [
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Since",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicDeletedItemModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/fields": {
+			"get": {
+				"tags": ["PublicFields"],
+				"parameters": [
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "UpdatedSince",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicFieldModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/fields/{fieldId}": {
+			"get": {
+				"tags": ["PublicFields"],
+				"parameters": [
+					{
+						"name": "fieldId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicFieldModel"
 								}
 							}
 						}
@@ -447,6 +848,26 @@
 				}
 			}
 		},
+		"/api/v1/groups/roles": {
+			"get": {
+				"tags": ["PublicGroups"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/PublicGroupRoleModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/api/v1/groups/{groupId}": {
 			"get": {
 				"tags": ["PublicGroups"],
@@ -543,6 +964,53 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/groups/deleted": {
+			"get": {
+				"tags": ["PublicGroups"],
+				"parameters": [
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Since",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicDeletedItemModelPublicPage"
 								}
 							}
 						}
@@ -1248,6 +1716,122 @@
 				}
 			}
 		},
+		"/api/v1/members/{memberId}/attendance": {
+			"get": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "memberId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					},
+					{
+						"name": "From",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "To",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "Type",
+						"in": "query",
+						"schema": {
+							"$ref": "#/components/schemas/PublicEventType"
+						}
+					},
+					{
+						"name": "GroupId",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberAttendanceModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/members/deleted": {
+			"get": {
+				"tags": ["PublicMembers"],
+				"parameters": [
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Since",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicDeletedItemModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/api/v1/news": {
 			"get": {
 				"tags": ["PublicNews"],
@@ -1458,6 +2042,45 @@
 						}
 					}
 				}
+			},
+			"delete": {
+				"tags": ["PublicNews"],
+				"parameters": [
+					{
+						"name": "newsId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/api/v1/news/{newsId}/publish": {
@@ -1530,6 +2153,73 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/news/deleted": {
+			"get": {
+				"tags": ["PublicNews"],
+				"parameters": [
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Since",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicDeletedItemModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/sponsors": {
+			"get": {
+				"tags": ["PublicSponsors"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/PublicSponsorModel"
+									}
 								}
 							}
 						}
@@ -1755,6 +2445,274 @@
 						}
 					}
 				}
+			},
+			"delete": {
+				"tags": ["PublicTasks"],
+				"parameters": [
+					{
+						"name": "taskId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/tasks/{taskId}/invites": {
+			"get": {
+				"tags": ["PublicTasks"],
+				"parameters": [
+					{
+						"name": "taskId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/PublicInviteModel"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["PublicTasks"],
+				"parameters": [
+					{
+						"name": "taskId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicInviteMembersModel"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicInviteMembersModel"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicInviteMembersModel"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicTaskModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationProblemDetails"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/tasks/{taskId}/complete": {
+			"post": {
+				"tags": ["PublicTasks"],
+				"parameters": [
+					{
+						"name": "taskId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicTaskModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/tasks/{taskId}/reopen": {
+			"post": {
+				"tags": ["PublicTasks"],
+				"parameters": [
+					{
+						"name": "taskId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicTaskModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/tasks/deleted": {
+			"get": {
+				"tags": ["PublicTasks"],
+				"parameters": [
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Since",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicDeletedItemModelPublicPage"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/api/v1/webhooks": {
@@ -1958,7 +2916,11 @@
 					"McpFiles",
 					"McpCancelReasons",
 					"Sponsors",
-					"Webhooks"
+					"Webhooks",
+					"Attendance",
+					"EventsDelete",
+					"TasksDelete",
+					"NewsDelete"
 				],
 				"type": "string"
 			},
@@ -2029,6 +2991,72 @@
 						"maxLength": 200,
 						"minLength": 0,
 						"type": "string"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicClubDetailsModel": {
+				"required": [
+					"contactEmail",
+					"id",
+					"language",
+					"location",
+					"name",
+					"primaryColor",
+					"secondaryColor",
+					"slug",
+					"timeZone",
+					"url"
+				],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"slug": {
+						"type": "string",
+						"nullable": true
+					},
+					"url": {
+						"type": "string",
+						"nullable": true
+					},
+					"primaryColor": {
+						"type": "string",
+						"nullable": true
+					},
+					"secondaryColor": {
+						"type": "string",
+						"nullable": true
+					},
+					"location": {
+						"type": "string",
+						"nullable": true
+					},
+					"timeZone": {
+						"type": "string",
+						"nullable": true
+					},
+					"language": {
+						"type": "string",
+						"nullable": true
+					},
+					"contactEmail": {
+						"type": "string",
+						"nullable": true
+					},
+					"logoUrl": {
+						"type": "string",
+						"nullable": true
+					},
+					"bannerUrl": {
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"additionalProperties": false
@@ -2117,6 +3145,14 @@
 						"maxLength": 200,
 						"minLength": 0,
 						"type": "string",
+						"nullable": true
+					},
+					"publish": {
+						"type": "boolean"
+					},
+					"publishAt": {
+						"type": "string",
+						"format": "date-time",
 						"nullable": true
 					}
 				},
@@ -2343,6 +3379,58 @@
 				},
 				"additionalProperties": false
 			},
+			"PublicDeletedItemModel": {
+				"required": ["deletedAt", "id"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"externalId": {
+						"type": "string",
+						"nullable": true
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicDeletedItemModelPublicPage": {
+				"required": ["items"],
+				"type": "object",
+				"properties": {
+					"items": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicDeletedItemModel"
+						},
+						"nullable": true
+					},
+					"nextOffset": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicEmailGroupModel": {
+				"required": ["emailEnabled", "groupId"],
+				"type": "object",
+				"properties": {
+					"groupId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"emailEnabled": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
 			"PublicEventModel": {
 				"required": [
 					"description",
@@ -2355,6 +3443,7 @@
 					"isPrivate",
 					"location",
 					"name",
+					"responses",
 					"startTime",
 					"type",
 					"updatedAt"
@@ -2389,12 +3478,32 @@
 						"type": "string",
 						"nullable": true
 					},
+					"fieldId": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
 					"fieldName": {
 						"type": "string",
 						"nullable": true
 					},
+					"latitude": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
 					"type": {
 						"$ref": "#/components/schemas/PublicEventType"
+					},
+					"repeatId": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
 					},
 					"isClubEvent": {
 						"type": "boolean"
@@ -2426,6 +3535,19 @@
 						"type": "string",
 						"nullable": true
 					},
+					"publishedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"scheduledPublishAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"responses": {
+						"$ref": "#/components/schemas/PublicResponseCountsModel"
+					},
 					"updatedAt": {
 						"type": "string",
 						"format": "date-time"
@@ -2456,23 +3578,51 @@
 				"enum": ["Game", "Practice", "Other"],
 				"type": "string"
 			},
-			"PublicGender": {
-				"enum": ["Unspecified", "Female", "Male", "Other"],
-				"type": "string"
-			},
-			"PublicEmailGroupModel": {
-				"required": ["emailEnabled", "groupId"],
+			"PublicFieldModel": {
+				"required": ["id", "name", "updatedAt"],
 				"type": "object",
 				"properties": {
-					"groupId": {
+					"id": {
 						"type": "string",
 						"format": "uuid"
 					},
-					"emailEnabled": {
-						"type": "boolean"
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
 					}
 				},
 				"additionalProperties": false
+			},
+			"PublicFieldModelPublicPage": {
+				"required": ["items"],
+				"type": "object",
+				"properties": {
+					"items": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicFieldModel"
+						},
+						"nullable": true
+					},
+					"nextOffset": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicGender": {
+				"enum": ["Unspecified", "Female", "Male", "Other"],
+				"type": "string"
 			},
 			"PublicGroupModel": {
 				"required": ["description", "id", "name", "type", "updatedAt"],
@@ -2496,6 +3646,10 @@
 					},
 					"type": {
 						"$ref": "#/components/schemas/PublicGroupType"
+					},
+					"logoUrl": {
+						"type": "string",
+						"nullable": true
 					},
 					"publishesClubNews": {
 						"type": "boolean"
@@ -2526,13 +3680,81 @@
 				},
 				"additionalProperties": false
 			},
-			"PublicGroupRole": {
-				"enum": ["Player", "Coach", "Staff", "Chairman", "Member"],
-				"type": "string"
+			"PublicGroupRoleModel": {
+				"required": ["groupType", "id", "name", "receivesTeamNotifications"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"groupType": {
+						"$ref": "#/components/schemas/PublicGroupType"
+					},
+					"receivesTeamNotifications": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
 			},
 			"PublicGroupType": {
 				"enum": ["Team", "Commission"],
 				"type": "string"
+			},
+			"PublicInviteMembersModel": {
+				"required": ["memberIds"],
+				"type": "object",
+				"properties": {
+					"memberIds": {
+						"maxItems": 100,
+						"minItems": 1,
+						"type": "array",
+						"items": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicInviteModel": {
+				"required": ["firstname", "lastname", "memberId", "status", "volunteered"],
+				"type": "object",
+				"properties": {
+					"memberId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"firstname": {
+						"type": "string",
+						"nullable": true
+					},
+					"infix": {
+						"type": "string",
+						"nullable": true
+					},
+					"lastname": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/PublicInviteStatus"
+					},
+					"volunteered": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicInviteStatus": {
+				"enum": [0, 1, 2],
+				"type": "integer",
+				"format": "int32",
+				"x-enum-varnames": ["Pending", "Accepted", "Declined"]
 			},
 			"PublicMemberAccountModel": {
 				"required": ["email", "invitePending", "isParent", "isPrimaryContact", "linkId"],
@@ -2606,6 +3828,33 @@
 				},
 				"additionalProperties": false
 			},
+			"PublicMemberAttendanceModel": {
+				"required": ["from", "memberId", "responses", "to"],
+				"type": "object",
+				"properties": {
+					"memberId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"from": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"to": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"responses": {
+						"$ref": "#/components/schemas/PublicResponseCountsModel"
+					},
+					"percentage": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
 			"PublicMemberFieldModel": {
 				"required": ["id", "isRequired", "name", "options", "type", "visibleToMember"],
 				"type": "object",
@@ -2668,25 +3917,36 @@
 				"additionalProperties": false
 			},
 			"PublicMemberGroupModel": {
-				"required": ["groupId", "role"],
+				"required": ["groupId"],
 				"type": "object",
 				"properties": {
 					"groupId": {
 						"type": "string",
 						"format": "uuid"
 					},
+					"roleId": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
 					"role": {
-						"$ref": "#/components/schemas/PublicGroupRole"
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"additionalProperties": false
 			},
 			"PublicMemberGroupRoleModel": {
-				"required": ["role"],
 				"type": "object",
 				"properties": {
+					"roleId": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
 					"role": {
-						"$ref": "#/components/schemas/PublicGroupRole"
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"additionalProperties": false
@@ -3060,8 +4320,14 @@
 						"type": "string",
 						"format": "uuid"
 					},
+					"roleId": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
 					"role": {
-						"$ref": "#/components/schemas/PublicGroupRole"
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"additionalProperties": false
@@ -3167,11 +4433,50 @@
 				"enum": ["Parent", "Guardian", "Other"],
 				"type": "string"
 			},
+			"PublicPublishEventModel": {
+				"type": "object",
+				"properties": {
+					"publishAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
 			"PublicPublishNewsModel": {
 				"type": "object",
 				"properties": {
 					"visibility": {
 						"$ref": "#/components/schemas/PublicNewsVisibility"
+					},
+					"publishAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicResponseCountsModel": {
+				"required": ["accepted", "declined", "invited", "pending"],
+				"type": "object",
+				"properties": {
+					"invited": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"accepted": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"declined": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pending": {
+						"type": "integer",
+						"format": "int32"
 					}
 				},
 				"additionalProperties": false
@@ -3207,6 +4512,67 @@
 				},
 				"additionalProperties": false
 			},
+			"PublicSponsorGroupModel": {
+				"required": ["id", "name"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicSponsorModel": {
+				"required": ["groups", "id", "name", "tier", "tierOrder"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"tagline": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"website": {
+						"type": "string",
+						"nullable": true
+					},
+					"logoUrl": {
+						"type": "string",
+						"nullable": true
+					},
+					"tier": {
+						"type": "string",
+						"nullable": true
+					},
+					"tierOrder": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"groups": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicSponsorGroupModel"
+						},
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
 			"PublicTaskModel": {
 				"required": [
 					"acceptedCount",
@@ -3215,6 +4581,7 @@
 					"groupId",
 					"id",
 					"name",
+					"responses",
 					"updatedAt"
 				],
 				"type": "object",
@@ -3251,6 +4618,14 @@
 					"acceptedCount": {
 						"type": "integer",
 						"format": "int32"
+					},
+					"responses": {
+						"$ref": "#/components/schemas/PublicResponseCountsModel"
+					},
+					"completedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
 					},
 					"updatedAt": {
 						"type": "string",
@@ -3592,7 +4967,7 @@
 		"securitySchemes": {
 			"Bearer": {
 				"type": "http",
-				"description": "Bearer authorization using a user JWT; the public API takes a club API key (kva_\u2026) instead. Example: \"Authorization: Bearer {token}\"",
+				"description": "Bearer authorization using a user JWT; the public API takes a club API key (kva_…) instead. Example: \"Authorization: Bearer {token}\"",
 				"scheme": "bearer"
 			}
 		}
@@ -3607,7 +4982,13 @@
 			"name": "PublicApiKey"
 		},
 		{
+			"name": "PublicClub"
+		},
+		{
 			"name": "PublicEvents"
+		},
+		{
+			"name": "PublicFields"
 		},
 		{
 			"name": "PublicGroups"
@@ -3617,6 +4998,9 @@
 		},
 		{
 			"name": "PublicNews"
+		},
+		{
+			"name": "PublicSponsors"
 		},
 		{
 			"name": "PublicTasks"

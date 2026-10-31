@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Breaking:** group roles are the club's own now (such as Speler, Hoofdcoach, Scorer) instead of Player, Coach,
+  Staff, Chairman and Member. Member **Add to Group** and the **Groups** of **Create** and **Onboard** take
+  **Role Name or ID**, chosen from the club's roles (needs the Groups scope); left empty, Keeva keeps a member's
+  current role or gives the club's first role for the group. Workflows that set a role must pick it again.
+- The OpenAPI test fixture is refreshed from the current public API, including `GET /api/v1/groups/roles`.
 - Member **Onboard**: each account takes **Email On For Groups** and **Email Off For Groups**, which groups' news the
   account gets by email, working like the switches in the Keeva app for new and existing accounts.
 - The OpenAPI test fixture includes the onboarding `emailGroups` fields and the groups' `publishesClubNews`.

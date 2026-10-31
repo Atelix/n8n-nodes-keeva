@@ -30,11 +30,16 @@ function present(value: unknown): boolean {
 	return value !== undefined && value !== null && value !== '';
 }
 
-/** Group rows of the "Groups" fixed collection as Keeva's `[{ groupId, role }]`. */
-export function toGroupMemberships(collection: unknown, defaultRole = 'Player'): IDataObject[] {
+/**
+ * Group rows of the "Groups" fixed collection as Keeva's `[{ groupId, roleId }]`. A row without a role leaves it out,
+ * so Keeva gives the club's first role for the group.
+ */
+export function toGroupMemberships(collection: unknown): IDataObject[] {
 	return rows(collection, 'group')
 		.filter((row) => present(row.groupId))
-		.map((row) => ({ groupId: row.groupId, role: present(row.role) ? row.role : defaultRole }));
+		.map((row) =>
+			present(row.roleId) ? { groupId: row.groupId, roleId: row.roleId } : { groupId: row.groupId },
+		);
 }
 
 /** A multi-select value (or an expression's comma-separated text) as a list of IDs. */
@@ -106,6 +111,7 @@ export function buildMemberBody(
 		additionalFields?: IDataObject;
 		personalData?: IDataObject;
 		memberFields?: IDataObject;
+		roleId?: unknown;
 	},
 ): IDataObject {
 	const result: IDataObject = { ...body };
@@ -127,6 +133,9 @@ export function buildMemberBody(
 		Object.assign(result, toPersonalData(parameters.personalData) ?? {});
 	} else if (operation === 'setFields') {
 		result.values = toFieldValues(parameters.memberFields);
+	} else if (operation === 'addToGroup' && present(parameters.roleId)) {
+		// Without a role Keeva keeps the member's current role, or gives a new member the club's first role.
+		result.roleId = String(parameters.roleId);
 	}
 	return result;
 }
@@ -148,6 +157,7 @@ export async function memberBodyPreSend(
 		additionalFields: read('additionalFields'),
 		personalData: read('personalData'),
 		memberFields: read('memberFields'),
+		roleId: operation === 'addToGroup' ? this.getNodeParameter('roleId', '') : undefined,
 	});
 	normalizeDateFields(body, this.getTimezone());
 	requestOptions.body = body;

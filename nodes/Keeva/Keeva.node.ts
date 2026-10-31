@@ -6,7 +6,7 @@ import { memberDescription } from './resources/member';
 import { newsDescription } from './resources/news';
 import { parentAccountDescription } from './resources/parentAccount';
 import { taskDescription } from './resources/task';
-import { getGroups, getMemberFields } from './shared/loadOptions';
+import { getGroupRoles, getGroups, getMemberFields } from './shared/loadOptions';
 import { API_ROOT_EXPRESSION } from './shared/transport';
 
 export class Keeva implements INodeType {
@@ -59,6 +59,7 @@ export class Keeva implements INodeType {
 
 	methods = {
 		loadOptions: {
+			getGroupRoles,
 			getGroups,
 			getMemberFields,
 		},
