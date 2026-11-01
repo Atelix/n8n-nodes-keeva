@@ -76,22 +76,31 @@ describe('member bodies', () => {
 		]);
 	});
 
-	it('gives onboarded groups the Player role unless another is chosen', () => {
+	it('sends the chosen club role of onboarded groups and leaves it out when none is chosen', () => {
 		const body = buildMemberBody(
 			'onboard',
 			{ externalId: '1001' },
 			{
 				additionalFields: {
-					groups: { group: [{ groupId: 'g1' }, { groupId: 'g2', role: 'Coach' }] },
+					groups: {
+						group: [
+							{ groupId: 'g1', roleId: '' },
+							{ groupId: 'g2', roleId: 'r-coach' },
+						],
+					},
 				},
 			},
 		);
-		expect(body.groups).toEqual([
-			{ groupId: 'g1', role: 'Player' },
-			{ groupId: 'g2', role: 'Coach' },
-		]);
+		expect(body.groups).toEqual([{ groupId: 'g1' }, { groupId: 'g2', roleId: 'r-coach' }]);
 		expect(body).not.toHaveProperty('accounts');
 		expect(body).not.toHaveProperty('personalData');
+	});
+
+	it('sends the chosen role when adding to a group, and an empty body without one', () => {
+		expect(buildMemberBody('addToGroup', {}, { roleId: 'r-scorer' })).toEqual({
+			roleId: 'r-scorer',
+		});
+		expect(buildMemberBody('addToGroup', {}, { roleId: '' })).toEqual({});
 	});
 
 	it('sends an account’s email group choices, on first, and leaves them out when none are chosen', () => {

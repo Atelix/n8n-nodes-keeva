@@ -228,7 +228,7 @@ describe('Keeva node against the public OpenAPI document', () => {
 			memberFields: IDataObject;
 		} = {
 			additionalFields: {
-				groups: { group: [{ groupId: 'g1', role: 'Coach' }] },
+				groups: { group: [{ groupId: 'g1', roleId: 'r1' }] },
 				accounts: {
 					account: [
 						{
@@ -272,11 +272,18 @@ describe('Keeva node against the public OpenAPI document', () => {
 			['onboard', 'POST /members/onboard'],
 			['setPersonalData', 'PUT /members/{}/personalData'],
 			['setFields', 'PATCH /members/{}/fields'],
+			['addToGroup', 'PUT /members/{}/groups/{}'],
 		];
 		for (const [operation, key] of cases) {
-			const body = buildMemberBody(operation, {}, filled);
+			const body = buildMemberBody(operation, {}, { ...filled, roleId: 'r1' });
 			expect(Object.keys(body).length, operation).toBeGreaterThan(0);
 			expect(unknownFields(body, requestSchema(apiOperations.get(key))), operation).toEqual([]);
+		}
+	});
+
+	it('loads dropdown options from endpoints that exist', () => {
+		for (const key of ['GET /groups', 'GET /groups/roles', 'GET /members/fields']) {
+			expect(apiOperations.has(key), key).toBe(true);
 		}
 	});
 

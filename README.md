@@ -109,7 +109,8 @@ sends it to process it on the club's behalf:
 - **Create**, **Get**, **Get Many** (filters: External ID, Updated Since), **Update**.
 
 **Member**
-- **Add to Group**: put the member in a group with a role, or change their role there.
+- **Add to Group**: put the member in a group with one of the club's own roles (from Keeva's group roles), or change
+  their role there.
 - **Create**: add a member with email address and, optionally, birth date, in groups, with personal data and member field
   values.
 - **Delete**: deletes the member **for good**, with their invitations, attendance, account links, group rights and

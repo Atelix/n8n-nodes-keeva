@@ -2,14 +2,6 @@ import type { INodeProperties, INodePropertyOptions } from 'n8n-workflow';
 
 import { paginateByNextOffset } from './pagination';
 
-export const GROUP_ROLE_OPTIONS: INodePropertyOptions[] = [
-	{ name: 'Chairman', value: 'Chairman' },
-	{ name: 'Coach', value: 'Coach' },
-	{ name: 'Member', value: 'Member' },
-	{ name: 'Player', value: 'Player' },
-	{ name: 'Staff', value: 'Staff' },
-];
-
 export const EVENT_TYPE_OPTIONS: INodePropertyOptions[] = [
 	{ name: 'Game', value: 'Game' },
 	{ name: 'Other', value: 'Other' },

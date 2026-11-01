@@ -16,6 +16,18 @@ export async function getGroups(this: ILoadOptionsFunctions): Promise<INodePrope
 		.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+/** The club's active group roles in the club's order (needs the Groups scope), for teams or committees. */
+export async function getGroupRoles(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+	const roles = (await keevaApiRequest.call(this, 'GET', '/groups/roles')) as IDataObject[];
+	return (roles ?? []).map((role) => ({
+		name: String(role.name),
+		value: String(role.id),
+		description: `${role.groupType === 'Commission' ? 'Committees' : 'Teams'}${
+			role.receivesGroupNotifications ? ', receives group notifications' : ''
+		}`,
+	}));
+}
+
 /** The club's active member fields in the club's order (needs Members and MembersPersonalData). */
 export async function getMemberFields(
 	this: ILoadOptionsFunctions,
