@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Member **Get Many**: a **Membership** filter for only current or only former members (their member-until date has
+  passed). Keeva returns `isFormerMember` on every member; former members are in no group and cannot be invited.
+- The OpenAPI test fixture includes the members' `isFormerMember` and its list filter.
 - **Breaking:** group roles are the club's own now (such as Speler, Hoofdcoach, Scorer) instead of Player, Coach,
   Staff, Chairman and Member. Member **Add to Group** and the **Groups** of **Create** and **Onboard** take
   **Role Name or ID**, chosen from the club's roles (needs the Groups scope); left empty, Keeva keeps a member's

@@ -1030,6 +1030,13 @@
 						}
 					},
 					{
+						"name": "IsFormerMember",
+						"in": "query",
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
 						"name": "GroupId",
 						"in": "query",
 						"schema": {
@@ -3952,7 +3959,7 @@
 				"additionalProperties": false
 			},
 			"PublicMemberModel": {
-				"required": ["firstname", "groups", "id", "lastname", "updatedAt"],
+				"required": ["firstname", "groups", "id", "isFormerMember", "lastname", "updatedAt"],
 				"type": "object",
 				"properties": {
 					"id": {
@@ -3974,6 +3981,9 @@
 					"externalId": {
 						"type": "string",
 						"nullable": true
+					},
+					"isFormerMember": {
+						"type": "boolean"
 					},
 					"groups": {
 						"type": "array",

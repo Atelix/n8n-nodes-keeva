@@ -565,6 +565,27 @@ export const memberDescription: INodeProperties[] = [
 	...getManyProperties(resource, [
 		externalIdFilterOption,
 		groupFilterOption,
+		{
+			displayName: 'Membership',
+			name: 'isFormerMember',
+			type: 'options',
+			options: [
+				{
+					name: 'Current Members',
+					value: false,
+					description: 'Members whose member-until date has not passed',
+				},
+				{
+					name: 'Former Members',
+					value: true,
+					description:
+						'Members whose member-until date has passed. They are in no group and cannot be invited.',
+				},
+			],
+			default: false,
+			description: 'Whether to list only current or only former members',
+			routing: { send: { type: 'query', property: 'isFormerMember' } },
+		},
 		updatedSinceFilterOption,
 	]),
 ];
