@@ -5,6 +5,21 @@ import { fetchAllPages, type KeevaPage } from '../Keeva/shared/transport';
 
 /** The event types a Keeva webhook can subscribe to, in the order of Keeva's documentation. */
 export const WEBHOOK_EVENT_TYPES: INodePropertyOptions[] = [
+	{
+		name: 'Application Decided',
+		value: 'application.decided',
+		description: 'The club accepted or declined an application from the registration form',
+	},
+	{
+		name: 'Application Received',
+		value: 'application.received',
+		description: 'Someone applied through the registration form and confirmed their email address',
+	},
+	{
+		name: 'Application Withdrawn',
+		value: 'application.withdrawn',
+		description: 'The applicant withdrew an open application, which deletes it',
+	},
 	{ name: 'Event Cancelled', value: 'event.cancelled', description: 'An event is cancelled' },
 	{
 		name: 'Event Created',

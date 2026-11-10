@@ -50,6 +50,7 @@ Each kind of data has separate read, create and change scopes. Give the key only
 
 | Resource | Operation | Scopes |
 |----------|-----------|--------|
+| Application | Get, Get Many | `MemberApplications` (the club needs the Club or Pro plan with the registration form) |
 | Event | Get, Get Many | `Events` (private events also need `PrivateEvents`) |
 | Event | Create | `EventsCreate` (a private event also needs `PrivateEvents`) |
 | Event | Update, Cancel | `EventsUpdate` |
@@ -71,15 +72,15 @@ Each kind of data has separate read, create and change scopes. Give the key only
 | News | Update | `NewsUpdate` |
 | News | Publish | `NewsPublish` |
 | Parent Account | Update | `MembersUpdate` + `MembersContacts` |
-| Keeva Trigger | any | The read scope of the watched data (`Events`, `Tasks`, `Groups`, `Members` or `News`) |
-| Keeva Instant Trigger | any | `Webhooks` + the read scope of every chosen event type (`event.*` needs `Events`, `task.*` `Tasks`, and so on) |
+| Keeva Trigger | any | The read scope of the watched data (`Events`, `Tasks`, `Groups`, `Members`, `News` or `MemberApplications`) |
+| Keeva Instant Trigger | any | `Webhooks` + the read scope of every chosen event type (`event.*` needs `Events`, `task.*` `Tasks`, `application.*` `MemberApplications`, and so on) |
 
 The **Group** pickers load the club's groups and need `Groups`; without it, enter a group ID instead. The **Member
 field** picker needs `Members` + `MembersPersonalData`.
 
 ### Personal data
 
-Member data your workflows read from Keeva (names, email addresses, birth dates, personal data, member fields) is
+Member data your workflows read from Keeva (names, email addresses, birth dates, personal data, member fields, applications) is
 personal data under the GDPR. The club stays responsible for it, and the n8n instance and every service a workflow
 sends it to process it on the club's behalf:
 

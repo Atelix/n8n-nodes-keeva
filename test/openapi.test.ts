@@ -140,6 +140,8 @@ describe('Keeva node against the public OpenAPI document', () => {
 	it('offers the operations of phase 1', () => {
 		expect(nodeOperations.map((o) => `${o.resource}:${o.operation}`).sort()).toEqual(
 			[
+				'application:get',
+				'application:getAll',
 				'event:cancel',
 				'event:create',
 				'event:get',
