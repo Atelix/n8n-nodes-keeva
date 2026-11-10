@@ -256,6 +256,9 @@ describe('helpers', () => {
 	it('offers every subscribable Keeva event type, and not ping', () => {
 		expect(WEBHOOK_EVENT_TYPES.map((o) => o.value).sort()).toEqual(
 			[
+				'application.received',
+				'application.decided',
+				'application.withdrawn',
 				'event.created',
 				'event.updated',
 				'event.cancelled',

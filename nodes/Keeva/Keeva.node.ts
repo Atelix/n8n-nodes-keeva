@@ -1,5 +1,6 @@
 import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
 
+import { applicationDescription } from './resources/application';
 import { eventDescription } from './resources/event';
 import { groupDescription } from './resources/group';
 import { memberDescription } from './resources/member';
@@ -39,6 +40,7 @@ export class Keeva implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
+					{ name: 'Application', value: 'application' },
 					{ name: 'Event', value: 'event' },
 					{ name: 'Group', value: 'group' },
 					{ name: 'Member', value: 'member' },
@@ -48,6 +50,7 @@ export class Keeva implements INodeType {
 				],
 				default: 'event',
 			},
+			...applicationDescription,
 			...eventDescription,
 			...taskDescription,
 			...groupDescription,

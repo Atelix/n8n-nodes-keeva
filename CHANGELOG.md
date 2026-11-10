@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- A new **Application** resource with **Get** and **Get Many** (filter on **Status** and **Updated Since**) for the
+  applications of a club's registration form, and **Application Received**, **Application Decided** and
+  **Application Withdrawn** in the **Keeva Webhook Trigger**; the **Keeva Trigger** can poll applications too. The key
+  needs the new Applications scope (`MemberApplications`). Needs the Keeva release with `/api/v1/applications`.
+- The OpenAPI test fixture includes the applications endpoints.
 - Member **Get Many**: a **Membership** filter for only current or only former members (their member-until date has
   passed). Keeva returns `isFormerMember` on every member; former members are in no group and cannot be invited.
 - The OpenAPI test fixture includes the members' `isFormerMember` and its list filter.

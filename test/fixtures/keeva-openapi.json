@@ -27,6 +27,98 @@
 				}
 			}
 		},
+		"/api/v1/applications": {
+			"get": {
+				"tags": ["PublicApplications"],
+				"parameters": [
+					{
+						"name": "Status",
+						"in": "query",
+						"schema": {
+							"$ref": "#/components/schemas/PublicApplicationStatus"
+						}
+					},
+					{
+						"name": "Offset",
+						"in": "query",
+						"schema": {
+							"maximum": 2147483647,
+							"minimum": 0,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "Limit",
+						"in": "query",
+						"schema": {
+							"maximum": 100,
+							"minimum": 1,
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "UpdatedSince",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberApplicationModelPublicPage"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/applications/{applicationId}": {
+			"get": {
+				"tags": ["PublicApplications"],
+				"parameters": [
+					{
+						"name": "applicationId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicMemberApplicationModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/api/v1/club": {
 			"get": {
 				"tags": ["PublicClub"],
@@ -2927,7 +3019,8 @@
 					"Attendance",
 					"EventsDelete",
 					"TasksDelete",
-					"NewsDelete"
+					"NewsDelete",
+					"MemberApplications"
 				],
 				"type": "string"
 			},
@@ -2989,6 +3082,47 @@
 					}
 				},
 				"additionalProperties": false
+			},
+			"PublicApplicationGroupModel": {
+				"required": ["id", "name"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicApplicationParentModel": {
+				"required": ["email", "firstname", "lastname", "relationship"],
+				"type": "object",
+				"properties": {
+					"firstname": {
+						"type": "string",
+						"nullable": true
+					},
+					"lastname": {
+						"type": "string",
+						"nullable": true
+					},
+					"email": {
+						"type": "string",
+						"nullable": true
+					},
+					"relationship": {
+						"$ref": "#/components/schemas/PublicParentRelationship"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicApplicationStatus": {
+				"enum": ["Pending", "Accepted", "Declined"],
+				"type": "string"
 			},
 			"PublicCancelEventModel": {
 				"required": ["reason"],
@@ -3830,6 +3964,134 @@
 					"countryCode": {
 						"pattern": "^[A-Za-z]{2}$",
 						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicMemberApplicationModel": {
+				"required": [
+					"fields",
+					"firstname",
+					"forChild",
+					"fromWebsite",
+					"groupWishes",
+					"id",
+					"lastname",
+					"status",
+					"updatedAt"
+				],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"status": {
+						"$ref": "#/components/schemas/PublicApplicationStatus"
+					},
+					"forChild": {
+						"type": "boolean"
+					},
+					"firstname": {
+						"type": "string",
+						"nullable": true
+					},
+					"infix": {
+						"type": "string",
+						"nullable": true
+					},
+					"lastname": {
+						"type": "string",
+						"nullable": true
+					},
+					"birthDate": {
+						"type": "string",
+						"format": "date",
+						"nullable": true
+					},
+					"email": {
+						"type": "string",
+						"nullable": true
+					},
+					"phoneNumber": {
+						"type": "string",
+						"nullable": true
+					},
+					"address": {
+						"$ref": "#/components/schemas/PublicMemberAddressModel"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/PublicGender"
+					},
+					"emergencyContactName": {
+						"type": "string",
+						"nullable": true
+					},
+					"emergencyContactPhone": {
+						"type": "string",
+						"nullable": true
+					},
+					"parent": {
+						"$ref": "#/components/schemas/PublicApplicationParentModel"
+					},
+					"message": {
+						"type": "string",
+						"nullable": true
+					},
+					"fromWebsite": {
+						"type": "boolean"
+					},
+					"groupWishes": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicApplicationGroupModel"
+						},
+						"nullable": true
+					},
+					"fields": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicMemberFieldValueModel"
+						},
+						"nullable": true
+					},
+					"receivedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"decidedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"clubMemberId": {
+						"type": "string",
+						"format": "uuid",
+						"nullable": true
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"additionalProperties": false
+			},
+			"PublicMemberApplicationModelPublicPage": {
+				"required": ["items"],
+				"type": "object",
+				"properties": {
+					"items": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PublicMemberApplicationModel"
+						},
+						"nullable": true
+					},
+					"nextOffset": {
+						"type": "integer",
+						"format": "int32",
 						"nullable": true
 					}
 				},
@@ -4990,6 +5252,9 @@
 	"tags": [
 		{
 			"name": "PublicApiKey"
+		},
+		{
+			"name": "PublicApplications"
 		},
 		{
 			"name": "PublicClub"
