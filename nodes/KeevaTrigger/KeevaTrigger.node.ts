@@ -15,6 +15,7 @@ import { pollKeeva, type PollState } from './poll';
 
 /** The list each resource polls. */
 export const TRIGGER_PATHS: Record<string, string> = {
+	application: '/applications',
 	event: '/events',
 	group: '/groups',
 	member: '/members',
@@ -46,6 +47,11 @@ export class KeevaTrigger implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
+					{
+						name: 'Application',
+						value: 'application',
+						description: 'New or decided applications from the registration form',
+					},
 					{
 						name: 'Event',
 						value: 'event',
