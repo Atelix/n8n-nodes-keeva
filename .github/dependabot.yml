@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+    schedule:
+      interval: "monthly"
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+    schedule:
+      interval: "monthly"
+    groups:
+      monthly-version-updates:
+        patterns:
+          - "*"

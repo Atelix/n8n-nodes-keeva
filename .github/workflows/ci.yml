@@ -2,42 +2,66 @@ name: CI
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
   push:
     branches:
       - main
+  # Lets the pipeline run in a GitHub merge queue when one is enabled for the target branch.
+  merge_group:
+  # Used by the publish workflow to test the release tag before it is published to npm.
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Git ref to check out and test instead of the ref that triggered the caller, such as a release tag'
+        type: string
+        default: ''
+  workflow_dispatch:
 
+# The job only reads the repository.
 permissions:
   contents: read
 
 # Cancel in-progress runs for the same branch/PR to avoid wasting CI minutes.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build, lint and test
+    # Draft pull requests are skipped until they are ready for review.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '24'
+          node-version-file: .node-version
           cache: 'npm'
 
       - name: Install dependencies
+        id: install
         run: npm ci
 
+      # The checks below run independently so a single run reports every failure.
       - name: Lint (n8n community node rules)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run lint
 
       - name: Type-check sources and tests
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run typecheck
 
       - name: Test
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm test
 
       - name: Build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run build
